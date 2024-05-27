@@ -1,19 +1,85 @@
-### Minimal Frame Averaging
+# Minimal Frame Averaging
 
 ---
 
-Official code repository of paper [Equivariance via Minimal Frame Averaging for More Symmetries and Efficiency]().
+## Overview
 
-Currently, we are still organizing codes for different experiments. In this code base, we only provide the equivariance error test for all the group included in the paper, which suffices to show our idea and corresponding algorithm. These tests are
+Official code repository of paper [Equivariance via Minimal Frame Averaging for More Symmetries and Efficiency](). In this repository, we have provided decorators to convert any non-equivariant/invariant neural network functions into group equivariant/invariant ones. This enables neural networks to handle transformations from various groups such as $O(d), SO(d), O(1,d-1)$, etc.
 
-- `euclidean`: Equivariance error test of $O(d)/SO(d)/E(d)/SE(d)$
-- `degenerate`: Equivariance error test of $O(d)/SO(d)/E(d)/SE(d)$ for degenerate point clouds
-- `algebraic`: Equivariance error test of $O(1,d-1)$ and $SO(1,d-1)$
-- `complex`: Equivariance error test of $U(d)$ and $SU(d)$
-- `special`: Equivariance error test of $SL(d,\mathbb{R})$ and $GL(d,\mathbb{R})$
-- `point_group`: Equivariance error test of $S_n$ and $S_n \times O(d)$
 
-By directly running the corresponding Python files, the error will be printed to the console. Note that the error is listed in the columns of a matrix in an order of “Plain, MFA, FA, SFA” or just “Plain, MFA” if there is only two columns, where “Plain” denotes no frame averaging is used, “MFA” denotes our minimal frame averaging method, “FA” denotes original frame averaging method [1] and “SFA” denotes stochastic frame averaging method [2].
+
+## Usage
+
+### Example: $O(d)$-Equivariant/Invariant Decorator
+
+The `od_equivariant_decorator` can be used to wrap any forward function to make it $O(d)$​-equivariant. An example model can be
+
+```python
+import torch.nn as nn
+
+class MyModel(nn.Module):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        # Define your layers here
+
+    def forward(self, x):
+        # Your forward pass implementation
+        return x
+```
+
+To apply this decorator to this neural network class’s forward function:
+
+```python
+import torch.nn as nn
+
+class MyModel(nn.Module):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        # Define your layers here
+        
+	@od_equivariant_decorator
+    def forward(self, x):
+        # Your forward pass implementation
+        return x
+```
+
+To apply this decorator to a neural network instance's forward function:
+
+```python
+# Instantiate your model
+model = MyModel()
+
+# Apply the O(d)-equivariant decorator
+model.forward = od_equivariant_decorator(model.forward)
+```
+
+Similarly, the `od_invariant_decorator` can be used to make the network $O(d)$-invariant.
+
+
+
+
+
+## Supported Groups
+
+- Orthogonal Group $O(d)$ 
+- Special Orthogonal Group $SO(d)$
+- Euclidean Group $E(d)$
+- Special Euclidean Group $SE(d)$
+- Unitary Group $U(d)$
+- Special Unitary Group $SU(d)$
+- Lorentz Group $O(1,d-1)$
+- Special Lorentz Group $SO(1,d-1)$
+- General Linear Group $GL(d,\mathbb{R})$
+- Special Linear Group $SL(d,\mathbb{R})$
+- Symmetric Group $S_n$
+- Direct product between Symmetric Group $S_n$ and other groups
+  - $S_n \times O(d)$
+  - $S_n \times SO(d)$
+  - $S_n \times O(1,d-1)$
+
+
+
+Currently, we are still organizing codes for different experiments. In this code base, we only provide the equivariance error test for all the groups included in the paper, which suffices to show our idea and corresponding algorithms. Stay tuned for more details!
 
 ---
 
