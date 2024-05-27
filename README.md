@@ -68,7 +68,7 @@ Similarly, the `od_invariant_decorator` can be used to make the network $O(d)$-i
 - Unitary Group $U(d)$
 - Special Unitary Group $SU(d)$
 - Lorentz Group $O(1,d-1)$
-- Special Lorentz Group $SO(1,d-1)$
+- Proper Lorentz Group $SO(1,d-1)$
 - General Linear Group $GL(d,\mathbb{R})$
 - Special Linear Group $SL(d,\mathbb{R})$
 - Symmetric Group $S_n$
