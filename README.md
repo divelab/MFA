@@ -37,7 +37,7 @@ class MyModel(nn.Module):
         super(MyModel, self).__init__()
         # Define your layers here
         
-	@od_equivariant_decorator
+    @od_equivariant_decorator
     def forward(self, x):
         # Your forward pass implementation
         return x
