@@ -2,9 +2,6 @@
 Canonical Labeling Utils
 ============
 
-Description:
-------------
-
 Author:
 -------
 Yuchao Lin
@@ -17,6 +14,7 @@ from nauty import Nauty
 
 
 def permutation_array_to_matrix(permutation_array):
+    """ Converting permutation array to permutation matrix """
     n = len(permutation_array)
     permutation_matrix = np.zeros((n, n), dtype=int)
     for i, p in enumerate(permutation_array):
@@ -25,6 +23,7 @@ def permutation_array_to_matrix(permutation_array):
 
 
 def coordinates_to_graph(coords):
+    """ Converting coordinates to undirected weighted graph with inner products as edge attributes """
     d, n = coords.shape
     iu = np.triu_indices(n, 1)
     edge_index = np.vstack(iu).T
@@ -33,6 +32,7 @@ def coordinates_to_graph(coords):
 
 
 def relabel_undirected_graph(node_attr, edge_index, edge_attr):
+    """ Converting undirected weighted graph to undirected unweighted graph """
     n = node_attr.shape[0]
 
     unique_node_attrs, node_colors = np.unique(node_attr, axis=0, return_inverse=True)
@@ -55,6 +55,7 @@ def relabel_undirected_graph(node_attr, edge_index, edge_attr):
 
 
 def create_lab_ptn_from_weights(weights):
+    """ Create input to nauty algorithm from node colors (or weights) """
     inds = np.arange(len(weights))
 
     indices = np.lexsort((inds, weights))
@@ -71,6 +72,7 @@ def create_lab_ptn_from_weights(weights):
 
 
 def generate_permutation_frames(graph_data):
+    """ Create S_n frames """
     node_attr, edge_index, edge_attr = graph_data
     adj_matrix, weights = relabel_undirected_graph(node_attr, edge_index, edge_attr)
     lab, ptn = create_lab_ptn_from_weights(weights)
