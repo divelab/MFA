@@ -1,9 +1,6 @@
 """
-Generalized QR Decomposition in PyTorchr
+Generalized QR Decomposition in PyTorch
 ============
-
-Description:
-------------
 
 Author:
 -------
@@ -15,14 +12,39 @@ import torch
 
 @torch.jit.script
 def find_independent_vectors_cuda(P):
+    """ Find rank(P) linearly independent vectors from P """
     n = P.size(0)
-    r = int(torch.linalg.matrix_rank(P))
+    r = int(torch.linalg.matrix_rank(P.to(torch.float32)))
 
     indices = torch.arange(r)
     done = False
     while not done:
         subset = P[indices, :]
-        if torch.linalg.matrix_rank(subset) == torch.linalg.matrix_rank(P):
+        if torch.linalg.matrix_rank(subset.to(torch.float32)) == r:
+            return subset
+        done = True
+        for i in range(r - 1, -1, -1):
+            if indices[i] != i + n - r:
+                indices[i] += 1
+                for j in range(i + 1, r):
+                    indices[j] = indices[j - 1] + 1
+                done = False
+                break
+
+    return None
+
+
+@torch.jit.script
+def find_independent_vectors_complex_cuda(P):
+    """ Find rank(P) linearly independent vectors from P """
+    n = P.size(0)
+    r = int(torch.linalg.matrix_rank(P.to(torch.complex64)))
+
+    indices = torch.arange(r)
+    done = False
+    while not done:
+        subset = P[indices, :]
+        if torch.linalg.matrix_rank(subset.to(torch.complex64)) == r:
             return subset
         done = True
         for i in range(r - 1, -1, -1):
@@ -37,6 +59,7 @@ def find_independent_vectors_cuda(P):
 
 @torch.jit.script
 def qr_decomposition(coords):
+    """ QR decomposition on induced set """
     vecs = find_independent_vectors_cuda(coords)
     assert vecs is not None
     Q, R = torch.linalg.qr(vecs.transpose(0, 1), mode='complete')
@@ -49,7 +72,8 @@ def qr_decomposition(coords):
 
 @torch.jit.script
 def qr_decomposition_complex(coords):
-    vecs = find_independent_vectors_cuda(coords)
+    """ Complex QR decomposition on induced set """
+    vecs = find_independent_vectors_complex_cuda(coords)
     assert vecs is not None
     Q, R = torch.linalg.qr(vecs.H, mode='complete')
     for j in range(R.size(1)):
@@ -74,6 +98,7 @@ def project(u, v, eta):
 
 @torch.jit.script
 def gram_schmidt(A, eta):
+    """ Generalized Gram-Schmidt orthogonalization """
     m, n = A.size()
     metric_length = eta.size(0)
     Q = torch.zeros((m, metric_length), dtype=A.dtype).to(A.device)
@@ -103,6 +128,7 @@ def gram_schmidt(A, eta):
 
 @torch.jit.script
 def modified_gram_schmidt(A, eta):
+    """ Modified generalized Gram-Schmidt orthogonalization """
     m, n = A.size()
     metric_length = eta.size(0)
     Q = torch.zeros((m, metric_length), dtype=A.dtype).to(A.device)
@@ -128,6 +154,7 @@ def modified_gram_schmidt(A, eta):
 
 @torch.jit.script
 def generate_permutation(eta_c, eta, vecs):
+    """ Algorithm 2 """
     n, d = vecs.size()
     S = torch.eye(d).to(vecs.dtype)
     a = eta_c
@@ -150,6 +177,7 @@ def generate_permutation(eta_c, eta, vecs):
 
 @torch.jit.script
 def generate_minkowski_permutation_matrix(Q, eta):
+    """ Algorithm 2 but only for O(1,d-1)/SO(1,d-1) """
     diag_elements = torch.diag(torch.matmul(Q.T, torch.matmul(eta, Q)))
     swap_index = int(torch.argmax(diag_elements).item())
     P = torch.eye(len(diag_elements)).to(Q.dtype).to(Q.device)
@@ -162,6 +190,7 @@ def generate_minkowski_permutation_matrix(Q, eta):
 
 @torch.jit.script
 def generalized_qr_decomposition(coords, eta):
+    """ Generalized QR decomposition """
     vecs = find_independent_vectors_cuda(coords)
     assert vecs is not None
     Q, eta_c, R = modified_gram_schmidt(vecs.transpose(0, 1), eta)
