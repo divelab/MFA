@@ -4,10 +4,9 @@ Graph Automorphism Algorithm
 
 Description:
 ------------
-Python implementation of nauty algorithm based on nauty-2.8.8 at https://pallini.di.uniroma1.it/
+Python replicate of nauty algorithm based on https://pallini.di.uniroma1.it/ without bit storage
 
 The implementation mainly covers files among
-    - nauty.h
     - nauty.c
     - nautil.c
     - naugraph.c

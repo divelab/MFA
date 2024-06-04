@@ -6,7 +6,18 @@
 
 Official code repository of paper [Equivariance via Minimal Frame Averaging for More Symmetries and Efficiency](). In this repository, we have provided decorators to convert any non-equivariant/invariant neural network functions into group equivariant/invariant ones. This enables neural networks to handle transformations from various groups such as $O(d), SO(d), O(1,d-1)$, etc.
 
+Currently, we are still organizing codes for different experiments in our paper. In this code base, we currently provide the equivariance error test for all the groups included in the paper, which suffices to show our idea and corresponding algorithms. Stay tuned for more details!
 
+
+## Installation
+
+**Note**: We recommend that you install the `torch` package separately.
+
+To install the package, use the following command:
+
+```sh
+pip install -e . --extra-index-url https://download.pytorch.org/whl/cu118
+```
 
 ## Usage
 
@@ -31,6 +42,7 @@ To apply this decorator to this neural network class’s forward function:
 
 ```python
 import torch.nn as nn
+from minimal_frame.group_decorator import od_equivariant_decorator
 
 class MyModel(nn.Module):
     def __init__(self):
@@ -61,6 +73,11 @@ Similarly, the `od_invariant_decorator` can be used to make the network $O(d)$-i
 
 ## Supported Groups
 
+This repository provides a collection of decorators to enforce equivariance or invariance properties in neural network models. These decorators are model-agnostic and can be applied to any model with input and output shapes of $n\times d$ for equivariance or with input shape of $n\times d$ and output shape of $1$ for invariance.
+
+Equivariance ensures that the output of the model transforms in the same way as the input under a given group of transformations. Invariance ensures that the output remains unchanged under such transformations.
+
+
 - Orthogonal Group $O(d)$ 
 - Special Orthogonal Group $SO(d)$
 - Euclidean Group $E(d)$
@@ -78,14 +95,14 @@ Similarly, the `od_invariant_decorator` can be used to make the network $O(d)$-i
   - $S_n \times O(1,d-1)$
 
 
-
-Currently, we are still organizing codes for different experiments. In this code base, we only provide the equivariance error test for all the groups included in the paper, which suffices to show our idea and corresponding algorithms. Stay tuned for more details!
-
+  
 ## References
 
 [1] Puny, Omri, et al. "Frame averaging for invariant and equivariant network design." *arXiv preprint arXiv:2110.03336* (2021).
 
 [2] Duval, Alexandre Agm, et al. "Faenet: Frame averaging equivariant gnn for materials modeling." *International Conference on Machine Learning*. PMLR, 2023.
+
+[3] McKay, Brendan D. "Practical graph isomorphism." (1981): 45-87.
 
 ## Licence
 
