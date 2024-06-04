@@ -81,8 +81,12 @@ Similarly, the `od_invariant_decorator` can be used to make the network $O(d)$-i
 
 Currently, we are still organizing codes for different experiments. In this code base, we only provide the equivariance error test for all the groups included in the paper, which suffices to show our idea and corresponding algorithms. Stay tuned for more details!
 
----
+## References
 
 [1] Puny, Omri, et al. "Frame averaging for invariant and equivariant network design." *arXiv preprint arXiv:2110.03336* (2021).
 
 [2] Duval, Alexandre Agm, et al. "Faenet: Frame averaging equivariant gnn for materials modeling." *International Conference on Machine Learning*. PMLR, 2023.
+
+## Licence
+
+This project is licensed under the MIT License. Please note that the `nauty` software is covered by its own licensing terms. All rights to the files mentioned in `nauty.py` are reserved by Brendan McKay under the Apache License 2.0.
