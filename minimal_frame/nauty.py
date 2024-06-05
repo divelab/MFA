@@ -481,8 +481,14 @@ class Nauty:
     def size(self):
         return int(self.stats['grpsize1'] * 10 ** self.stats['grpsize2'])
 
-    def generate_full_group(self):
-        G = PermutationGroup([Permutation(perm.tolist()) for perm in self.perms])
+    def generate_full_group(self, maximum_node=None):
+        if len(self.perms) == 0:
+            return None
+        if maximum_node is not None:
+            self.perms = [perm[:maximum_node] for perm in self.perms]
+        stacked_perms = np.stack(self.perms, axis=0)
+        unique_perms = np.unique(stacked_perms, axis=0)
+        G = PermutationGroup([Permutation(perm.tolist()) for perm in unique_perms])
         return list(G.generate())
 
     def processnode(self, lab, ptn, level, numcells):

@@ -71,11 +71,27 @@ def create_lab_ptn_from_weights(weights):
     return indices, ptn
 
 
-def generate_permutation_frames(graph_data):
+def generate_permutation_frames(graph_data, weighted=True, maximum_node=None):
     """ Create S_n frames """
     node_attr, edge_index, edge_attr = graph_data
-    adj_matrix, weights = relabel_undirected_graph(node_attr, edge_index, edge_attr)
+    if weighted:
+        adj_matrix, weights = relabel_undirected_graph(node_attr, edge_index, edge_attr)
+    else:
+        n = node_attr.shape[0]
+        adj_matrix = np.zeros((n, n), dtype=np.bool_)
+        for edge in edge_index:
+            adj_matrix[edge[0], edge[1]] = True
+            adj_matrix[edge[1], edge[0]] = True
+        weights = node_attr
+
     lab, ptn = create_lab_ptn_from_weights(weights)
     N_py = Nauty(adj_matrix.shape[0], adj_matrix, lab, ptn, defaultptn=False)
-    canon = Permutation(N_py.canonlab.tolist())
-    return [canon * auto for auto in N_py.generate_full_group()]
+    if maximum_node is not None:
+        canon = Permutation(N_py.canonlab[:maximum_node].tolist())
+    else:
+        canon = Permutation(N_py.canonlab.tolist())
+    autos = N_py.generate_full_group(maximum_node)
+    if autos is not None:
+        return [canon * auto for auto in autos]
+    else:
+        return [canon]

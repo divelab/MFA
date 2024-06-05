@@ -73,7 +73,7 @@ Similarly, the `od_invariant_decorator` can be used to make the network $O(d)$-i
 
 ## Supported Groups
 
-This repository provides a collection of decorators to enforce equivariance or invariance properties in neural network models. These decorators are model-agnostic and can be applied to any model with input and output shapes of $n\times d$ for equivariance or with input shape of $n\times d$ and output shape of $1$ for invariance.
+This repository provides a collection of decorators to enforce equivariance or invariance properties in neural network models. These decorators are model-agnostic and can be applied to any model with input and output shapes of $n\times d$ for equivariance or with input shape of $n\times d$ and output shape of $1$ for invariance. A comprehensive equivariance analysis over various groups can be found [here](https://github.com/divelab/MFA/blob/main/tests/equivariance_test.ipynb). Additionally, the equivariant/invariant decorators for undirected graphs are provided for any model with undirected adjacency matrices as input. The corresponding equivariance analysis can be found [here](https://github.com/divelab/MFA/blob/main/tests/graph_equivariance_test.ipynb).
 
 Equivariance ensures that the output of the model transforms in the same way as the input under a given group of transformations. Invariance ensures that the output remains unchanged under such transformations.
 
@@ -95,7 +95,7 @@ Equivariance ensures that the output of the model transforms in the same way as 
   - $S_n \times O(1,d-1)$
 
 
-  
+
 ## References
 
 [1] Puny, Omri, et al. "Frame averaging for invariant and equivariant network design." *arXiv preprint arXiv:2110.03336* (2021).
