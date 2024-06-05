@@ -790,6 +790,55 @@ def sld_invariant_decorator(forward_func):
     return wrapper
 
 
+def affd_equivariant_decorator(forward_func):
+    """
+        Aff(d, \mathbb{R})-equivariant decorator
+
+        Args (wrapping forward function in PyTorch nn.Module):
+            x (float32, float64): The input data with shape $n\times d$
+            *args, **kwargs: Other arguments in wrapped model's forward function
+
+        """
+
+    @wraps(forward_func)
+    def wrapper(x, *args, **kwargs):
+        assert x.dim() == 2
+        assert int(torch.linalg.matrix_rank(x.to(torch.float32))) == x.size(1)
+        centroid = x.mean(0, keepdim=True)
+        x = x - centroid
+        phi_A = find_independent_vectors_cuda(x)
+        assert torch.abs(torch.det(phi_A)) > 1e-5, "Input requires full column rank"
+        output = forward_func(torch.linalg.solve(phi_A.to(torch.float64).T, x.to(torch.float64).T).T.to(x.dtype), *args, **kwargs)
+        output = output @ phi_A + centroid
+        return output
+
+    return wrapper
+
+
+def affd_invariant_decorator(forward_func):
+    """
+        Aff(d, \mathbb{R})-invariant decorator
+
+        Args (wrapping forward function in PyTorch nn.Module):
+            x (float32, float64): The input data with shape $n\times d$
+            *args, **kwargs: Other arguments in wrapped model's forward function
+
+        """
+
+    @wraps(forward_func)
+    def wrapper(x, *args, **kwargs):
+        assert x.dim() == 2
+        assert int(torch.linalg.matrix_rank(x.to(torch.float32))) == x.size(1)
+        centroid = x.mean(0, keepdim=True)
+        x = x - centroid
+        phi_A = find_independent_vectors_cuda(x)
+        assert torch.abs(torch.det(phi_A)) > 1e-5, "Input requires full column rank"
+        output = forward_func(torch.linalg.solve(phi_A.to(torch.float64).T, x.to(torch.float64).T).T.to(x.dtype), *args, **kwargs)
+        return output
+
+    return wrapper
+
+
 def sn_equivariant_decorator(forward_func):
     """
         S_n-equivariant decorator

@@ -90,8 +90,9 @@ These decorators are model-agnostic and can be applied to any model with input a
 - Proper Lorentz Group $SO(1,d-1)$
 - General Linear Group $GL(d,\mathbb{R})$
 - Special Linear Group $SL(d,\mathbb{R})$
-- Symmetric Group $S_n$
-- Direct product between Symmetric Group $S_n$ and other groups
+- Affine Group $Aff(d,\mathbb{R})$
+- Permutation Group $S_n$
+- Direct product between Permutation Group $S_n$ and other groups
   - $S_n \times O(d)$
   - $S_n \times SO(d)$
   - $S_n \times O(1,d-1)$​
