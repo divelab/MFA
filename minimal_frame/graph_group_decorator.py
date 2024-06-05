@@ -1,3 +1,16 @@
+"""
+Group Decorator
+============
+
+Description:
+------------
+Equivariant/Invarirant decorator to random neural network models with undirected adjacency matrix as input
+
+Author:
+-------
+Yuchao Lin
+
+"""
 import torch
 from minimal_frame.canonical_labeling import *
 from functools import wraps
