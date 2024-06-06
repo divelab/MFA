@@ -927,13 +927,13 @@ def sn_od_equivariant_decorator(forward_func):
     def wrapper(x, *args, **kwargs):
         assert x.dim() == 2
         n, d = x.size()
-        phi = np.round((x @ x.T).detach().cpu().numpy(), decimals=3)
+        phi = np.round((x @ x.T).detach().cpu().numpy(), decimals=1)
         iu = np.triu_indices(x.size(0), 1)
         edge_index = np.vstack(iu).T
         edge_attr = phi[iu]
-        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr))
-        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame)[:n])).to(x.dtype).to(x.device) for frame in frames]
-        transformed_xs = [P @ x for P in Ps]
+        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr), maximum_node=n)
+        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame))).to(x.dtype).to(x.device) for frame in frames]
+        transformed_xs = [x[list(frame)] for frame in frames]
         eta = torch.eye(x.size(1)).to(torch.float64).to(x.device)
         Qs = [generalized_qr_decomposition(transformed_x.to(torch.float64), eta)[0].to(x.dtype) for transformed_x in transformed_xs]
         output = sum(
@@ -957,13 +957,13 @@ def sn_od_invariant_decorator(forward_func):
     def wrapper(x, *args, **kwargs):
         assert x.dim() == 2
         n, d = x.size()
-        phi = np.round((x @ x.T).detach().cpu().numpy(), decimals=3)
+        phi = np.round((x @ x.T).detach().cpu().numpy(), decimals=1)
         iu = np.triu_indices(x.size(0), 1)
         edge_index = np.vstack(iu).T
         edge_attr = phi[iu]
-        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr))
-        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame)[:n])).to(x.dtype).to(x.device) for frame in frames]
-        transformed_xs = [P @ x for P in Ps]
+        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr), maximum_node=n)
+        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame))).to(x.dtype).to(x.device) for frame in frames]
+        transformed_xs = [x[list(frame)] for frame in frames]
         eta = torch.eye(x.size(1)).to(torch.float64).to(x.device)
         Qs = [generalized_qr_decomposition(transformed_x.to(torch.float64), eta)[0].to(x.dtype) for transformed_x in transformed_xs]
         output = sum([forward_func(Ps[i] @ x @ Qs[i], *args, **kwargs) for i in range(len(Ps))]) / len(Ps)
@@ -986,13 +986,13 @@ def sn_sod_equivariant_decorator(forward_func):
     def wrapper(x, *args, **kwargs):
         assert x.dim() == 2
         n, d = x.size()
-        phi = np.round((x @ x.T).detach().cpu().numpy(), decimals=3)
+        phi = np.round((x @ x.T).detach().cpu().numpy(), decimals=1)
         iu = np.triu_indices(x.size(0), 1)
         edge_index = np.vstack(iu).T
         edge_attr = phi[iu]
-        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr))
-        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame)[:n])).to(x.device) for frame in frames]
-        transformed_xs = [P @ x for P in Ps]
+        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr), maximum_node=n)
+        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame))).to(x.device) for frame in frames]
+        transformed_xs = [x[list(frame)] for frame in frames]
         for i, transformed_x in enumerate(transformed_xs):
             if int(torch.linalg.matrix_rank(transformed_x.to(torch.float32))) == transformed_x.size(1) - 1:
                 while int(torch.linalg.matrix_rank(transformed_x.to(torch.float32))) == transformed_x.size(1) - 1:
@@ -1026,13 +1026,13 @@ def sn_sod_invariant_decorator(forward_func):
     def wrapper(x, *args, **kwargs):
         assert x.dim() == 2
         n, d = x.size()
-        phi = np.round((x @ x.T).detach().cpu().numpy(), decimals=3)
+        phi = np.round((x @ x.T).detach().cpu().numpy(), decimals=1)
         iu = np.triu_indices(x.size(0), 1)
         edge_index = np.vstack(iu).T
         edge_attr = phi[iu]
-        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr))
-        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame)[:n])).to(x.device) for frame in frames]
-        transformed_xs = [P @ x for P in Ps]
+        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr), maximum_node=n)
+        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame))).to(x.device) for frame in frames]
+        transformed_xs = [x[list(frame)] for frame in frames]
         for i, transformed_x in enumerate(transformed_xs):
             if int(torch.linalg.matrix_rank(transformed_x.to(torch.float32))) == transformed_x.size(1) - 1:
                 while int(torch.linalg.matrix_rank(transformed_x.to(torch.float32))) == transformed_x.size(1) - 1:
@@ -1068,13 +1068,13 @@ def sn_o1d_equivariant_decorator(forward_func):
         eta = -torch.eye(x.size(1))
         eta[0, 0] = 1.0
         eta = eta.to(x.device)
-        phi = (x @ eta @ x.T).detach().cpu().numpy()
+        phi = np.round((x @ eta @ x.T).detach().cpu().numpy(), decimals=1)
         iu = np.triu_indices(x.size(0), 1)
         edge_index = np.vstack(iu).T
         edge_attr = phi[iu]
-        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr))
-        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame)[:n])).to(x.device) for frame in frames]
-        transformed_xs = [P @ x for P in Ps]
+        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr), maximum_node=n)
+        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame))).to(x.device) for frame in frames]
+        transformed_xs = [x[list(frame)] for frame in frames]
         transformed_xs = [transformed_x[torch.abs(torch.diag(transformed_x @ eta @ transformed_x.T)) > 1e-2] for
                           transformed_x in transformed_xs]
         Qs = [generalized_qr_decomposition(transformed_x.to(torch.float64), eta.to(torch.float64))[0] for transformed_x in transformed_xs]
@@ -1104,13 +1104,13 @@ def sn_o1d_invariant_decorator(forward_func):
         eta = -torch.eye(x.size(1))
         eta[0, 0] = 1.0
         eta = eta.to(x.device)
-        phi = (x @ eta @ x.T).detach().cpu().numpy()
+        phi = np.round((x @ eta @ x.T).detach().cpu().numpy(), decimals=1)
         iu = np.triu_indices(x.size(0), 1)
         edge_index = np.vstack(iu).T
         edge_attr = phi[iu]
-        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr))
-        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame)[:n])).to(x.device) for frame in frames]
-        transformed_xs = [P @ x for P in Ps]
+        frames = generate_permutation_frames((np.zeros((n, 1)), edge_index, edge_attr), maximum_node=n)
+        Ps = [torch.FloatTensor(permutation_array_to_matrix(list(frame))).to(x.device) for frame in frames]
+        transformed_xs = [x[list(frame)] for frame in frames]
         transformed_xs = [transformed_x[torch.abs(torch.diag(transformed_x @ eta @ transformed_x.T)) > 1e-2] for
                           transformed_x in transformed_xs]
         Qs = [generalized_qr_decomposition(transformed_x.to(torch.float64), eta.to(torch.float64))[0] for transformed_x in transformed_xs]
