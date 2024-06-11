@@ -116,3 +116,23 @@ Additionally, the $S_n$-equivariant/invariant decorators for undirected graphs a
 ## Licence
 
 This project is licensed under the MIT License. Please note that the `nauty` software is covered by its own licensing terms. All rights to the files mentioned in `nauty.py` are reserved by Brendan McKay under the Apache License 2.0.
+
+
+## Acknowledgements
+
+We gratefully acknowledge the insightful discussions with Derek Lim and Hannah Lawrence. This work was supported in part by National Science Foundation grant IIS-2006861 and National Institutes of Health grant U01AG070112.
+
+## Citation
+
+If you find this work useful, please consider citing:
+
+```bib
+@inproceedings{
+lin2024equivariance,
+title={Equivariance via Minimal Frame Averaging for More Symmetries and Efficiency},
+author={Yuchao Lin and Jacob Helwig and Shurui Gui and Shuiwang Ji},
+booktitle={Forty-first International Conference on Machine Learning},
+year={2024},
+url={https://openreview.net/forum?id=guFsTBXsov}
+}
+```
