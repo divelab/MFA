@@ -5,7 +5,6 @@ setup(
     version='0.0.1',
     packages=find_packages(include=['minimal_frame', 'minimal_frame.*']),
     install_requires=[
-        'torch',
         'numpy',
         'numba',
         'sympy'
