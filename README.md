@@ -82,7 +82,7 @@ These decorators are model-agnostic and can be applied to any model with input a
 
 - Orthogonal Group $O(d)$:
   - `od_equivariant_decorator/od_invariant_decorator`: Our MFA method for $O(d)$
-  - `od_equivariant_puny_decorator/od_invariant_puny_decorator`: Puny's method [1] for $O(d)$
+  - `od_equivariant_puny_decorator/od_invariant_puny_decorator`: Puny's FA method [1] for $O(d)$
   - `od_equivariant_puny_improve_decorator/od_invariant_puny_improve_decorator`: Improved method from [1] for degenerate eigenvalues, see our Appendix H.3
   - `od_equivariant_sfa_decorator/od_invariant_sfa_decorator`: Stochastic FA method [2]
 - Special Orthogonal Group $SO(d)$: `sod_equivariant_decorator/sod_invariant_decorator`
