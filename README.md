@@ -11,7 +11,7 @@ Currently, we are still organizing codes to create a unified training interface 
 
 ## Installation
 
-**Note**: It is recommended to use a conda environment. First, you can install torch with the following command (if GPU is available):
+**Note**: It is recommended to use a `conda` environment. First, you can install `torch` with the following command (if GPU is available):
 ```sh
 conda install pytorch pytorch-cuda=11.8 -c pytorch -c nvidia
 ```
