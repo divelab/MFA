@@ -77,8 +77,7 @@ Similarly, the `od_invariant_decorator` can be used to make the network $O(d)$-i
 
 This repository provides a collection of decorators to enforce equivariance or invariance properties in neural network models. Equivariance ensures that the output of the model transforms in the same way as the input under a given group of transformations. Invariance ensures that the output remains unchanged under such transformations.
 
-These decorators are model-agnostic and can be applied to any model with input and output shapes of $n\times d$ for equivariance or with input shape of $n\times d$ and output shape of $1$ for invariance. A comprehensive equivariance analysis over various groups can be found [here](https://github.com/divelab/MFA/blob/main/tests/equivariance_test.ipynb). The groups and MFA decorators (if not specified) include 
-
+These decorators in `group_decorator.py` are model-agnostic and can be applied to any model with input and output shapes of $n\times d$ for equivariance or with input shape of $n\times d$ and output shape of $1$ for invariance. A comprehensive equivariance analysis over various groups can be found [here](https://github.com/divelab/MFA/blob/main/tests/equivariance_test.ipynb). The groups and MFA decorators (if not specified) include 
 
 - Orthogonal Group $O(d)$:
   - `od_equivariant_decorator/od_invariant_decorator`: Our MFA method for $O(d)$
@@ -101,7 +100,10 @@ These decorators are model-agnostic and can be applied to any model with input a
   - $S_n \times SO(d)$: `sn_sod_equivariant_decorator/sn_sod_invariant_decorator`
   - $S_n \times O(1,d-1)$: `sn_o1d_equivariant_decorator/sn_o1d_invariant_decorator`
 
-Additionally, the $S_n$-equivariant/invariant decorators for undirected graphs are provided for any model with undirected adjacency matrices as input. The corresponding equivariance analysis can be found [here](https://github.com/divelab/MFA/blob/main/tests/graph_equivariance_test.ipynb).
+Additionally, the $S_n$-equivariant/invariant decorators in `graph_group_decorator.py` for undirected graphs are provided for any model with undirected adjacency matrices as input. The corresponding equivariance analysis can be found [here](https://github.com/divelab/MFA/blob/main/tests/graph_equivariance_test.ipynb), including decorators for
+
+- Undirected unweighted adjacency matrix: `undirected_unweighted_sn_equivariant_decorator/undirected_unweighted_sn_invariant_decorator`
+- Undirected weighted adjacency matrix: `undirected_weighted_sn_equivariant_decorator/undirected_weighted_sn_invariant_decorator`
 
 
 
