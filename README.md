@@ -91,9 +91,9 @@ These decorators in `group_decorator.py` are model-agnostic and can be applied t
 - Special Unitary Group $SU(d)$: `sud_equivariant_decorator/sud_invariant_decorator`
 - Lorentz Group $O(1,d-1)$: `o1d_equivariant_decorator/o1d_invariant_decorator`
 - Proper Lorentz Group $SO(1,d-1)$: `so1d_equivariant_decorator/so1d_invariant_decorator`
-- General Linear Group $GL(d,\mathbb{R})$ (Require full-column-rank input): `gld_equivariant_decorator/gld_invariant_decorator`
-- Special Linear Group $SL(d,\mathbb{R})$ (Require full-column-rank input): `sld_equivariant_decorator/sld_invariant_decorator`
-- Affine Group $Aff(d,\mathbb{R})$ (Require full-column-rank input): `affd_equivariant_decorator/affd_invariant_decorator`
+- General Linear Group $GL(d,\mathbb{R})$ (requiring full-column-rank input): `gld_equivariant_decorator/gld_invariant_decorator`
+- Special Linear Group $SL(d,\mathbb{R})$ (requiring full-column-rank input): `sld_equivariant_decorator/sld_invariant_decorator`
+- Affine Group $Aff(d,\mathbb{R})$ (requiring full-column-rank input): `affd_equivariant_decorator/affd_invariant_decorator`
 - Permutation Group $S_n$: `sn_equivariant_decorator/sn_invariant_decorator`
 - Direct product between Permutation Group $S_n$ and other groups
   - $S_n \times O(d)$: `sn_od_equivariant_decorator/sn_od_invariant_decorator`
