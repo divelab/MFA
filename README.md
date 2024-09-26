@@ -4,7 +4,7 @@
 
 Official code repository of paper [Equivariance via Minimal Frame Averaging for More Symmetries and Efficiency](https://openreview.net/pdf?id=guFsTBXsov). In this repository, we have provided decorators to convert any non-equivariant/invariant neural network functions into group equivariant/invariant ones. This enables neural networks to handle transformations from various groups such as $O(d), SO(d), O(1,d-1)$, etc.
 
-Currently, we are still organizing codes to create a unified training interface for different experiments in our paper. In this code base, we provide the equivariance error test for all the groups included in the paper, which suffices to show our idea and corresponding algorithms. Stay tuned for more details!
+In this code base, we provide the equivariance error test for all the groups included in the paper, which suffices to show our idea and corresponding algorithms.
 
 
 
