@@ -96,11 +96,11 @@ def frame_averaging_2D(pos, cell=None, fa_method="random", check=False):
     pos_2D = pos[:, :2] - pos[:, :2].mean(dim=0, keepdim=True)
 
     rot = frame_cuda(pos_2D)
-    # if check:
-    #     if random.randint(0, 1) == 0:
-    #         # Additional rotation augmentation by pi
-    #         rot[:, 0] *= -1
-    #         rot[:, 1] *= -1
+    if check:
+        if random.randint(0, 1) == 0:
+            # Additional rotation augmentation by pi
+            rot[:, 0] *= -1
+            rot[:, 1] *= -1
 
     fa_pos = pos_2D @ rot
     fa_rot = torch.eye(3)
