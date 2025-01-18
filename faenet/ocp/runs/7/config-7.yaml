@@ -1,0 +1,156 @@
+adsorbates: all
+adsorbates_ref_dir: /
+amp: false
+checkpoint_dir: ocp/runs/7/checkpoints
+cluster_name: unknown
+commit: null
+config: faenet-is2re-all
+cp_data_to_tmpdir: false
+cpu: false
+data_split: all
+dataset:
+  default_val: val_id
+  train:
+    normalize_labels: true
+    split: all
+    src: is2res_train_val_test_lmdbs/data/is2re/all/train/
+    target_mean: -1.525913953781128
+    target_std: 2.279365062713623
+  val_id:
+    split: all
+    src: is2res_train_val_test_lmdbs/data/is2re/all/val_id/
+  val_ood_ads:
+    split: all
+    src: is2res_train_val_test_lmdbs/data/is2re/all/val_ood_ads/
+  val_ood_both:
+    split: all
+    src: is2res_train_val_test_lmdbs/data/is2re/all/val_ood_both/
+  val_ood_cat:
+    split: all
+    src: is2res_train_val_test_lmdbs/data/is2re/all/val_ood_cat/
+deup_dataset:
+  create: false
+  dataset_strs:
+  - train
+  - val_id
+  - val_ood_cat
+  - val_ood_ads
+  n_samples: 7
+distributed: false
+distributed_backend: nccl
+distributed_port: 13356
+fa_method: se3-random
+frame_averaging: 2D
+gpus: 1
+grad_fine_tune: false
+graph_rewiring: remove-tag-0
+inference_time_loops: 3
+is_debug: false
+is_hpo: false
+job_id: '7'
+job_ids: '7'
+local_rank: 0
+log_train_every: 100
+logdir: !!python/object/apply:pathlib.PosixPath
+- ocp
+- runs
+- '7'
+logger: tensorboard
+logs_dir: ocp/runs/7/logs
+mode: train
+model:
+  act: swish
+  complex_mp: true
+  cutoff: 6.0
+  dropout_edge: 0.0
+  dropout_lin: 0.0
+  dropout_lowest_layer: output
+  edge_embed_type: all_rij
+  energy_head: weighted-av-final-embeds
+  first_trainable_layer: ''
+  force_decoder_model_config:
+    mlp:
+      hidden_channels: 256
+      norm: batch1d
+    res:
+      hidden_channels: 128
+      norm: batch1d
+    res_updown:
+      hidden_channels: 128
+      norm: batch1d
+    simple:
+      hidden_channels: 128
+      norm: batch1d
+  force_decoder_type: mlp
+  graph_norm: true
+  graph_rewiring: remove-tag-0
+  hidden_channels: 384
+  max_num_neighbors: 40
+  mp_type: updownscale_base
+  num_filters: 480
+  num_gaussians: 104
+  num_interactions: 5
+  otf_graph: false
+  pg_hidden_channels: 96
+  phys_embeds: true
+  phys_hidden_channels: 0
+  regress_forces: ''
+  second_layer_MLP: false
+  skip_co: concat
+  tag_hidden_channels: 32
+  use_pbc: true
+model_name: faenet
+no_cpus_to_workers: true
+no_metrics_denorm: false
+normalizer: null
+num_gpus: 1
+num_nodes: 1
+optim:
+  batch_size: 256
+  energy_coefficient: 1
+  energy_grad_coefficient: 10
+  epoch_fine_tune: 4
+  eval_batch_size: 256
+  eval_every: 0.25
+  force_coefficient: 30
+  lr_gamma: 0.1
+  lr_initial: 0.002
+  lr_milestones:
+  - 18000
+  - 27000
+  - 37000
+  max_epochs: 12
+  num_workers: 4
+  optimizer: AdamW
+  scheduler: LinearWarmupCosineAnnealingLR
+  warmup_factor: 0.2
+  warmup_steps: 6000
+print_every: -1
+results_dir: ocp/runs/7/results
+run_dir: !!python/object/apply:pathlib.PosixPath
+- ocp
+- runs
+- '7'
+seed: 0
+silent: false
+slurm: {}
+slurm_mem: 80
+slurm_partition: ocp
+slurm_timeout: 72
+task:
+  dataset: single_point_lmdb
+  description: Relaxed state energy prediction from initial structure.
+  labels:
+  - relaxed energy
+  metric: mae
+  name: is2re
+  split: all
+  type: regression
+test_ri: true
+timestamp_id: 2024-01-31-10-34-08
+trainer: single
+use_pbc: true
+wandb_name: ''
+wandb_project: ocp
+wandb_tags: ''
+world_size: 1
