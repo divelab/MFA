@@ -126,31 +126,60 @@ def gram_schmidt(A, eta):
     return Q, eta_c, R
 
 
-@torch.jit.script
-def modified_gram_schmidt(A, eta):
-    """ Modified generalized Gram-Schmidt orthogonalization """
-    m, n = A.size()
-    metric_length = eta.size(0)
-    Q = torch.zeros((m, metric_length), dtype=A.dtype).to(A.device)
-    R = torch.zeros((metric_length, n), dtype=A.dtype).to(A.device)
-    eta_c = torch.zeros(metric_length, dtype=A.dtype).to(A.device)
+def differentiable_gram_schmidt(A, eta, tol=1e-8):
+    """ Differentiable Generalized Gram-Schmidt orthogonalization. """
+    m, n = A.shape
+
+    Q_list = []
+    R_list = []
+    eta_c_list = []
 
     for j in range(n):
         v = A[:, j]
+
+        R_row = []
         for i in range(j):
-            v = v - project(Q[:, i], v, eta)
+            q_i = Q_list[i]
+            R_ij = inner_product(q_i, A[:, j], eta)
+            R_row.append(R_ij)
+            norm_sq = inner_product(q_i, q_i, eta)  # <v, v>
+            norm_val = torch.sqrt(torch.abs(norm_sq))
+            if norm_val.item() < tol:
+                continue
+            v = v - project(q_i, A[:, j], eta)
 
-        norm_sq = inner_product(v, v, eta)
-        norm_sq = torch.sqrt(torch.abs(norm_sq))
-        assert norm_sq != 0.0
-        Q[:, j] = v / norm_sq
-        R[j, j] = inner_product(Q[:, j], A[:, j], eta)
-        if R[j, j] < 0:
-            Q[:, j] = -Q[:, j]
-            R[j, j] = -R[j, j]
-        eta_c[j] = torch.sign(inner_product(Q[:, j], Q[:, j], eta))
+        norm_sq = inner_product(v, v, eta)  # <v, v>
+        norm_val = torch.sqrt(torch.abs(norm_sq))
+
+        if norm_val.item() < tol:
+            Q_list.append(torch.zeros_like(v))
+            R_row.append(torch.tensor(0.0, dtype=A.dtype, device=A.device))
+            eta_c_list.append(torch.tensor(0.0, dtype=A.dtype, device=A.device))
+            R_full_row = torch.zeros(n, dtype=A.dtype, device=A.device)
+            R_full_row[:j + 1] = torch.tensor(R_row)
+            R_list.append(R_full_row)
+            continue
+
+        q_j = v / norm_val
+
+        Rjj = inner_product(q_j, A[:, j], eta)
+        if Rjj < 0:
+            q_j = -q_j
+            Rjj = -Rjj
+
+        Q_list.append(q_j)
+        R_row.append(Rjj)
+        eta_c = torch.sign(inner_product(q_j, q_j, eta))
+        eta_c_list.append(eta_c)
+
+        R_full_row = torch.zeros(n, dtype=A.dtype, device=A.device)
+        R_full_row[:j + 1] = torch.tensor(R_row)
+        R_list.append(R_full_row)
+
+    Q = torch.stack(Q_list, dim=1)
+    R = torch.stack(R_list, dim=1)
+    eta_c = torch.stack(eta_c_list)
     return Q, eta_c, R
-
 
 @torch.jit.script
 def generate_permutation(eta_c, eta, vecs):
@@ -193,7 +222,7 @@ def generalized_qr_decomposition(coords, eta):
     """ Generalized QR decomposition """
     vecs = find_independent_vectors_cuda(coords)
     assert vecs is not None
-    Q, eta_c, R = modified_gram_schmidt(vecs.transpose(0, 1), eta)
+    Q, eta_c, R = gram_schmidt(vecs.transpose(0, 1), eta)
     # P = generate_minkowski_permutation_matrix(Q, eta)
     P = generate_permutation(eta_c, eta, vecs)
     Q = Q @ P

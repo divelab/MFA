@@ -154,7 +154,7 @@ def eigenvalue_perturbation(P, epsilon=0.1, epsilon_start=0.1, l_submax=10, tol=
             continue
         V = eigvecs[:, indices]
         orthogonal_vectors = \
-            modified_gram_schmidt(find_independent_vectors_cuda(torch.DoubleTensor(P @ V @ V.T)).transpose(0, 1),
+            gram_schmidt(find_independent_vectors_cuda(torch.DoubleTensor(P @ V @ V.T)).transpose(0, 1),
                                   torch.eye(P.shape[1]).to(torch.float64))[0].numpy()
         P_proj = P @ orthogonal_vectors[:, :m]
 
