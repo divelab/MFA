@@ -2,8 +2,6 @@
 
 This repository contains the code used to *train* the models reported in [FAENet: Frame Averaging Equivariant GNNs for Materials Modeling](https://openreview.net/forum?id=HRDRZNxQXc).
 
-![pipeline](assets/pipeline.png)
-
 To re-use components of this work, we recommend using the associated python package:
 * 🔥 [**`faenet`**](https://github.com/vict0rsch/faenet)
   * `faenet.FAENet` implements our efficient GNN model (FAENet)
